@@ -7,7 +7,7 @@ metadata:
   displayName: Strimzi (APB)
   imageUrl: "https://avatars2.githubusercontent.com/u/34767428?s=200&v=4"
   documentationUrl: "http://strimzi.io/docs/master"
-  providerDisplayName: "Red Hat, Inc."  
+  providerDisplayName: "Matthias Wessendorf"  
 plans:
   - name: default
     description: This default plan deploys strimzi-apb
