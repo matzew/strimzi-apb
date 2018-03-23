@@ -1,0 +1,45 @@
+version: 1.0
+name: strimzi-apb
+description: Apache Kafka on Kubernetes and OpenShift
+bindable: False
+async: optional
+metadata:
+  displayName: Strimzi (APB)
+  imageUrl: "https://avatars2.githubusercontent.com/u/34767428?s=200&v=4"
+  documentationUrl: "http://strimzi.io/docs/master"
+  providerDisplayName: "Red Hat, Inc."  
+plans:
+  - name: default
+    description: This default plan deploys strimzi-apb
+    free: True
+    metadata: {}
+    parameters:
+    - name: admin_user
+      title: Openshift Admin User
+      type: string
+      required: true
+    - name: admin_password
+      title: Openshift Admin Password
+      type: string
+      display_type: password
+      required: true
+    - name: ZOOKEEPER_NODE_COUNT
+      required: True
+      default: 1
+      type: int
+      title: Number of Zookeeper nodes in the project
+    - name: KAFKA_NODE_COUNT
+      required: True
+      default: 1
+      type: int
+      title: Number of Kafka nodes in the project
+    - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+      required: True
+      default: 1
+      type: int
+      title: The replication factor for the offsets topic
+    - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+      required: True
+      default: 1
+      type: int
+      title: The replication factor for the transaction topic

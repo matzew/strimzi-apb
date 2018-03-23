@@ -1,0 +1,36 @@
+- name: Login As Super User
+  command: "oc login -u {{ admin_user }} -p {{ admin_password }}"
+
+- name: "Create Cluster Controller Service Account yaml"
+  template:
+    src: cluster-controller-sa.yml.j2
+    dest: /tmp/cluster-controller-sa.yaml
+
+- name: "Create Cluster Controller Service Account"
+  shell: "oc create -f /tmp/cluster-controller-sa.yaml -n {{ namespace }}"
+
+- name: "Delete Cluster Controller Template File"
+  file: path=/tmp/cluster-controller-sa.yaml state=absent
+
+- name: "Create Role"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/install/cluster-controller/02-role.yaml -n {{ namespace }}"
+
+- name: "Create Role Based Access Control"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/install/cluster-controller/03-role-binding.yaml -n {{ namespace }}"
+
+- name: "Create k8s deployment"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/install/cluster-controller/04-deployment.yaml -n {{ namespace }}"
+
+- name: "Create Persistant Storage template"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/templates/cluster-controller/persistent-template.yaml -n {{ namespace }}"
+
+- name: "Deploy a ZK and Kafka cluster"
+  shell: "oc new-app strimzi-persistent -p ZOOKEEPER_NODE_COUNT={{ ZOOKEEPER_NODE_COUNT }} -p KAFKA_NODE_COUNT={{ KAFKA_NODE_COUNT }} -p KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR={{ KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR }} -p KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR={{ KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR }} -n {{  namespace }}"
+
+# Check the topic controller pod is all ready
+- name: "Wait for Strimzi topic controller to become ready"
+  shell: oc get pods --namespace={{ namespace }} -l 'strimzi.io/name=my-cluster-topic-controller' -o jsonpath='{.items[*].status.containerStatuses[?(@.ready==true)].ready}'| wc -w
+  register: strimzi_result
+  until: strimzi_result.stdout.find("1") != -1
+  retries: 30
+  delay: 5
