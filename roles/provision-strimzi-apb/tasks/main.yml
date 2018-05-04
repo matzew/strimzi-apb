@@ -21,13 +21,25 @@
 - name: "Create k8s deployment"
   shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/install/cluster-controller/04-deployment.yaml -n {{ namespace }}"
 
+- name: "Create Connect S2i template"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/templates/cluster-controller/connect-s2i-template.yaml -n {{ namespace }}"
+
+- name: "Create Apache Kafka Connect template"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/templates/cluster-controller/connect-template.yaml -n {{ namespace }}"
+
 - name: "Create Persistant Storage template"
   shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/templates/cluster-controller/persistent-template.yaml -n {{ namespace }}"
+
+- name: "Create Topic Controller"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/templates/topic-controller/topic-configmap-template.yaml -n {{ namespace }}"
 
 - name: "Deploy a ZK and Kafka cluster"
   shell: "oc new-app strimzi-persistent -p ZOOKEEPER_NODE_COUNT={{ ZOOKEEPER_NODE_COUNT }} -p KAFKA_NODE_COUNT={{ KAFKA_NODE_COUNT }} -p KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR={{ KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR }} -p KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR={{ KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR }} -n {{  namespace }}"
 
-# Check the topic controller pod is all ready
+- name: "Deploy a ZK and Kafka cluster"
+  shell: "oc new-app strimzi-topic -n {{  namespace }}"
+
+# Check the controller pods are all ready
 - name: "Wait for Strimzi topic controller to become ready"
   shell: oc get pods --namespace={{ namespace }} -l 'strimzi.io/name=my-cluster-topic-controller' -o jsonpath='{.items[*].status.containerStatuses[?(@.ready==true)].ready}'| wc -w
   register: strimzi_result
