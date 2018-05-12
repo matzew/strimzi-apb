@@ -21,12 +21,6 @@
 - name: "Create k8s deployment"
   shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/install/cluster-controller/04-deployment.yaml -n {{ namespace }}"
 
-- name: "Create Connect S2i template"
-  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/templates/cluster-controller/connect-s2i-template.yaml -n {{ namespace }}"
-
-- name: "Create Apache Kafka Connect template"
-  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/templates/cluster-controller/connect-template.yaml -n {{ namespace }}"
-
 - name: "Create Persistant Storage template"
   shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/templates/cluster-controller/persistent-template.yaml -n {{ namespace }}"
 
