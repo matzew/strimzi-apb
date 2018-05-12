@@ -30,9 +30,6 @@
 - name: "Create Persistant Storage template"
   shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/templates/cluster-controller/persistent-template.yaml -n {{ namespace }}"
 
-- name: "Create Topic Controller"
-  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/templates/topic-controller/topic-configmap-template.yaml -n {{ namespace }}"
-
 - name: "Deploy a ZK and Kafka cluster"
   shell: "oc new-app strimzi-persistent -p ZOOKEEPER_NODE_COUNT={{ ZOOKEEPER_NODE_COUNT }} -p KAFKA_NODE_COUNT={{ KAFKA_NODE_COUNT }} -p KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR={{ KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR }} -p KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR={{ KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR }} -n {{  namespace }}"
 
