@@ -1,5 +1,5 @@
-STRIMZI_VERSION: "0.3.1"
+STRIMZI_VERSION: "0.4.0-rc1"
 
-cluster_controler_serviceaccount_name: "strimzi-cluster-controller"
-strimzi_image: " docker.io/strimzi/cluster-controller"
-strimzi_image_tag: "0.3.1"
+cluster_operator_serviceaccount_name: "strimzi-cluster-operator"
+strimzi_image: " docker.io/strimzi/cluster-operator"
+strimzi_image_tag: "0.4.0-rc1"
