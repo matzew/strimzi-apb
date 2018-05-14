@@ -14,6 +14,6 @@
 
 - name: Removing Strimzi Operator
   k8s_extensions_v1beta1_deployment:
-    name: strimzi-cluster-controller
+    name: strimzi-cluster-operator
     namespace: "{{ namespace}}"
     state: absent
