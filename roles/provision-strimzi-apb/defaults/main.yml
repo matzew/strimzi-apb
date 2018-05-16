@@ -1,5 +1,4 @@
-STRIMZI_VERSION: "0.4.0-rc1"
+STRIMZI_VERSION: "0.4.0"
 
 cluster_operator_serviceaccount_name: "strimzi-cluster-operator"
 strimzi_image: " docker.io/strimzi/cluster-operator"
-strimzi_image_tag: "0.4.0-rc1"

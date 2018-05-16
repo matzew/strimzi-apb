@@ -6,11 +6,15 @@ async: optional
 metadata:
   displayName: Strimzi (APB)
   imageUrl: "https://avatars2.githubusercontent.com/u/34767428?s=200&v=4"
-  documentationUrl: "http://strimzi.io/docs/master"
+  documentationUrl: "http://strimzi.io/docs/0.4.0/"
   providerDisplayName: "Red Hat, Inc."
+  dependencies:
+    - "docker.io/strimzi/cluster-operator:0.4.0"
+    - "docker.io/strimzi/zookeeper:0.4.0"
+    - "docker.io/strimzi/kafka:0.4.0"
 plans:
   - name: default
-    description: This default plan deploys strimzi-apb
+    description: Persistent deployment of Apache Kafka on Openshift
     free: True
     metadata: {}
     parameters:
@@ -23,6 +27,12 @@ plans:
       type: string
       display_type: password
       required: true
+    - name: CLUSTER_NAME
+      title: Name of the cluster
+      description: All Kubernetes resources will be named after the cluster name
+      type: string
+      default: my-cluster
+      required: true
     - name: ZOOKEEPER_NODE_COUNT
       required: True
       default: 1
@@ -33,6 +43,20 @@ plans:
       default: 1
       type: int
       title: Number of Kafka nodes in the project
+    - name: ZOOKEEPER_VOLUME_CAPACITY
+      title: Zookeeper Volume Capacity
+      description: Volume space available for Zookeeper data, e.g. 1Gi, 2Gi
+      type: enum
+      default: '1Gi'
+      enum: ['1Gi', '2Gi', '5Gi']
+      required: true
+    - name: KAFKA_VOLUME_CAPACITY
+      title: Kafka Volume Capacity
+      description: Volume space available for Kafka data, e.g. 1Gi, 2Gi
+      type: enum
+      default: '1Gi'
+      enum: ['1Gi', '2Gi', '5Gi']
+      required: true
     - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
       required: True
       default: 1
@@ -43,3 +67,33 @@ plans:
       default: 1
       type: int
       title: The replication factor for the transaction topic
+    - name: ZOOKEEPER_HEALTHCHECK_DELAY
+      title: Zookeeper healthcheck initial delay
+      description: Number of seconds after the container has started before healthcheck probes are initiated
+      required: true
+      default: 15
+      type: int
+    - name: ZOOKEEPER_HEALTHCHECK_TIMEOUT
+      title: Zookeeper healthcheck timeout
+      description: Number of seconds after which the probe times out
+      required: true
+      default: 5
+      type: int
+    - name: KAFKA_HEALTHCHECK_DELAY
+      title: Kafka healthcheck initial delay
+      description: Number of seconds after the container has started before healthcheck probes are initiated
+      required: true
+      default: 15
+      type: int
+    - name: KAFKA_HEALTHCHECK_TIMEOUT
+      title: Kafka healthcheck timeout
+      description: Number of seconds after which the probe times out
+      required: true
+      default: 5
+      type: int
+    - name: KAFKA_DEFAULT_REPLICATION_FACTOR
+      title: Default replication factor
+      description: Default replication factor for newly created topics
+      required: true
+      default: 1
+      type: int
