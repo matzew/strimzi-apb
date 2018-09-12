@@ -43,24 +43,24 @@
 - name: "Create Entity-Operator delegation yaml"
   template:
     src: 04-ClusterRoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml.j2
-    dest: /tmp/04-ClusterRoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml.yaml
+    dest: /tmp/04-ClusterRoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml
 
 - name: "Deploy Entity-Operator delegation yaml"
   shell: "oc create -f /tmp/04-ClusterRoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml -n {{ namespace }}"
 
 - name: "Delete Entity-Operator delegation yaml"
-  file: path=/tmp/04-ClusterRoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml.yaml state=absent
+  file: path=/tmp/04-ClusterRoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml state=absent
 
 - name: "Create Topic-Operator delegation yaml"
   template:
     src: 04-ClusterRoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml.j2
-    dest: /tmp/04-ClusterRoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml.yaml
+    dest: /tmp/04-ClusterRoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml
 
 - name: "Deploy Topic-Operator delegation yaml"
   shell: "oc create -f /tmp/04-ClusterRoleBinding-strimzi-cluster-topic-entity-operator-delegation.yaml -n {{ namespace }}"
 
 - name: "Delete Topic-Operator delegation yaml"
-  file: path=/tmp/04-ClusterRoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml.yaml state=absent
+  file: path=/tmp/04-ClusterRoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml state=absent
 
 - name: "Create Entity-Operator Role"
   shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/04-ClusterRole-strimzi-entity-operator.yaml -n {{ namespace }}"
