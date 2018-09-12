@@ -1,6 +1,6 @@
 version: 1.0
 name: strimzi-apb
-description: Apache Kafka on Kubernetes and OpenShift
+description: Apache Kafka 2.0.0 on Kubernetes and OpenShift
 bindable: False
 async: optional
 metadata:
@@ -9,9 +9,15 @@ metadata:
   documentationUrl: "http://strimzi.io/docs/0.4.0/"
   providerDisplayName: "Red Hat, Inc."
   dependencies:
-    - "docker.io/strimzi/cluster-operator:0.4.0"
-    - "docker.io/strimzi/zookeeper:0.4.0"
-    - "docker.io/strimzi/kafka:0.4.0"
+    - "docker.io/strimzi/topic-operator:0.6.0"
+    - "docker.io/strimzi/entity-operator-stunnel:0.6.0"
+    - "docker.io/strimzi/user-operator:0.6.0"
+    - "docker.io/strimzi/cluster-operator:0.6.0"
+    - "docker.io/strimzi/kafka:0.6.0"
+    - "docker.io/strimzi/kafka-stunnel:0.6.0"
+    - "docker.io/strimzi/kafka-init:0.6.0"
+    - "docker.io/strimzi/zookeeper-stunnel:0.6.0"
+    - "docker.io/strimzi/zookeeper:0.6.0"
 plans:
   - name: default
     description: Persistent deployment of Apache Kafka on Openshift

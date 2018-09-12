@@ -9,28 +9,87 @@
 - name: "Create Cluster operator Service Account"
   shell: "oc create -f /tmp/cluster-operator-sa.yaml -n {{ namespace }}"
 
-- name: "Delete Cluster Operator Template File"
+- name: "Delete Cluster Operator Service Account Template File"
   file: path=/tmp/cluster-operator-sa.yaml state=absent
 
-- name: "Create Role"
-  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/02-role.yaml -n {{ namespace }}"
+- name: "Create Cluster Operator yaml"
+  template:
+    src: 02-ClusterRoleBinding-strimzi-cluster-operator.yaml.j2
+    dest: /tmp/02-ClusterRoleBinding-strimzi-cluster-operator.yaml
 
-- name: "Create Role Based Access Control"
-  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/03-role-binding.yaml -n {{ namespace }}"
+- name: "Deploy Cluster Operator yaml"
+  shell: "oc create -f /tmp/02-ClusterRoleBinding-strimzi-cluster-operator.yaml -n {{ namespace }}"
 
-- name: "Create k8s deployment"
-  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/04-deployment.yaml -n {{ namespace }}"
+- name: "Delete Cluster Operator yaml"
+  file: path=/tmp/02-ClusterRoleBinding-strimzi-cluster-operator.yaml state=absent
+
+- name: "Create Cluster Operator Role"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/02-ClusterRole-strimzi-cluster-operator-role.yaml -n {{ namespace }}"
+
+- name: "Create Broker delegation yaml"
+  template:
+    src: 03-ClusterRoleBinding-strimzi-cluster-operator-kafka-broker-delegation.yaml.j2
+    dest: /tmp/03-ClusterRoleBinding-strimzi-cluster-operator-kafka-broker-delegation.yaml
+
+- name: "Deploy Broker delegation yaml"
+  shell: "oc create -f /tmp/03-ClusterRoleBinding-strimzi-cluster-operator-kafka-broker-delegation.yaml -n {{ namespace }}"
+
+- name: "Delete Broker delegation yaml"
+  file: path=/tmp/03-ClusterRoleBinding-strimzi-cluster-operator-kafka-broker-delegation.yaml state=absent
+
+- name: "Create Broker Role"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/03-ClusterRole-strimzi-kafka-broker.yaml -n {{ namespace }}"
+
+- name: "Create Entity-Operator delegation yaml"
+  template:
+    src: 04-ClusterRoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml.j2
+    dest: /tmp/04-ClusterRoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml.yaml
+
+- name: "Deploy Entity-Operator delegation yaml"
+  shell: "oc create -f /tmp/04-ClusterRoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml -n {{ namespace }}"
+
+- name: "Delete Entity-Operator delegation yaml"
+  file: path=/tmp/04-ClusterRoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml.yaml state=absent
+
+- name: "Create Topic-Operator delegation yaml"
+  template:
+    src: 04-ClusterRoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml.j2
+    dest: /tmp/04-ClusterRoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml.yaml
+
+- name: "Deploy Topic-Operator delegation yaml"
+  shell: "oc create -f /tmp/04-ClusterRoleBinding-strimzi-cluster-topic-entity-operator-delegation.yaml -n {{ namespace }}"
+
+- name: "Delete Topic-Operator delegation yaml"
+  file: path=/tmp/04-ClusterRoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml.yaml state=absent
+
+- name: "Create Entity-Operator Role"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/04-ClusterRole-strimzi-entity-operator.yaml -n {{ namespace }}"
+
+- name: "Create Topic-Operator Role"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/04-ClusterRole-strimzi-topic-operator.yaml -n {{ namespace }}"
+
+- name: "Create Kafka CRD"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/04-Crd-kafka.yaml -n {{ namespace }}"
+
+- name: "Create User CRD"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/04-Crd-kafkauser.yaml -n {{ namespace }}"
+
+- name: "Create Topic CRD"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/04-Crd-kafkatopic.yaml -n {{ namespace }}"
+
+- name: "Create Topic CRD"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/05-Deployment-strimzi-cluster-operator.yaml -n {{ namespace }}"
 
 - name: "Create Persistant Storage template"
-  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi/{{ STRIMZI_VERSION }}/examples/templates/cluster-operator/persistent-template.yaml -n {{ namespace }}"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/templates/cluster-operator/persistent-template.yaml -n {{ namespace }}"
 
 - name: "Deploy a ZK and Kafka cluster"
   shell: "oc new-app strimzi-persistent -p CLUSTER_NAME={{ CLUSTER_NAME }} -p ZOOKEEPER_NODE_COUNT={{ ZOOKEEPER_NODE_COUNT }} -p KAFKA_NODE_COUNT={{ KAFKA_NODE_COUNT }} -p ZOOKEEPER_VOLUME_CAPACITY={{ ZOOKEEPER_VOLUME_CAPACITY }} -p KAFKA_VOLUME_CAPACITY={{ KAFKA_VOLUME_CAPACITY }} -p ZOOKEEPER_HEALTHCHECK_DELAY={{ ZOOKEEPER_HEALTHCHECK_DELAY }} -p ZOOKEEPER_HEALTHCHECK_TIMEOUT={{ ZOOKEEPER_HEALTHCHECK_TIMEOUT }} -p KAFKA_HEALTHCHECK_DELAY={{ KAFKA_HEALTHCHECK_DELAY }} -p KAFKA_HEALTHCHECK_TIMEOUT={{ KAFKA_HEALTHCHECK_TIMEOUT }} -p KAFKA_DEFAULT_REPLICATION_FACTOR={{ KAFKA_DEFAULT_REPLICATION_FACTOR }} -p KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR={{ KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR }} -p KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR={{ KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR }} -n {{  namespace }}"
 
 # Check if the required Strimzi pods are all ready
 - name: "Wait for Strimzi topic Operator to become ready"
-  shell: oc get pods --namespace={{ namespace }} -l 'strimzi.io/name=my-cluster-topic-operator' -o jsonpath='{.items[*].status.containerStatuses[?(@.ready==true)].ready}'| wc -w
+  shell: oc get pods --namespace={{ namespace }} -l 'strimzi.io/name=my-cluster-entity-operator' -o jsonpath='{.items[*].status.containerStatuses[?(@.ready==true)].ready}'| wc -w
   register: strimzi_result
-  until: strimzi_result.stdout.find("1") != -1
+  until: strimzi_result.stdout.find("3") != -1
   retries: 40
   delay: 5
