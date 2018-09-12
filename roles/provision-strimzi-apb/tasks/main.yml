@@ -57,7 +57,7 @@
     dest: /tmp/04-ClusterRoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml
 
 - name: "Deploy Topic-Operator delegation yaml"
-  shell: "oc create -f /tmp/04-ClusterRoleBinding-strimzi-cluster-topic-entity-operator-delegation.yaml -n {{ namespace }}"
+  shell: "oc create -f /tmp/04-ClusterRoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml -n {{ namespace }}"
 
 - name: "Delete Topic-Operator delegation yaml"
   file: path=/tmp/04-ClusterRoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml state=absent
