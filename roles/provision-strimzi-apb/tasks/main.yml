@@ -39,17 +39,17 @@
 
 - name: "Create Broker delegation yaml"
   template:
-    src: 03-ClusterRoleBinding-strimzi-cluster-operator-kafka-broker-delegation.yaml.j2
-    dest: /tmp/03-ClusterRoleBinding-strimzi-cluster-operator-kafka-broker-delegation.yaml
+    src: 030-ClusterRoleBinding-strimzi-cluster-operator-kafka-broker-delegation.yaml.j2
+    dest: /tmp/030-ClusterRoleBinding-strimzi-cluster-operator-kafka-broker-delegation.yaml
 
 - name: "Deploy Broker delegation yaml"
-  shell: "oc create -f /tmp/03-ClusterRoleBinding-strimzi-cluster-operator-kafka-broker-delegation.yaml -n {{ namespace }}"
+  shell: "oc create -f /tmp/030-ClusterRoleBinding-strimzi-cluster-operator-kafka-broker-delegation.yaml -n {{ namespace }}"
 
 - name: "Delete Broker delegation yaml"
-  file: path=/tmp/03-ClusterRoleBinding-strimzi-cluster-operator-kafka-broker-delegation.yaml state=absent
+  file: path=/tmp/030-ClusterRoleBinding-strimzi-cluster-operator-kafka-broker-delegation.yaml state=absent
 
 - name: "Create Broker Role"
-  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/03-ClusterRole-strimzi-kafka-broker.yaml -n {{ namespace }}"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/030-ClusterRole-strimzi-kafka-broker.yaml -n {{ namespace }}"
 
 - name: "Create Entity-Operator delegation yaml"
   template:
