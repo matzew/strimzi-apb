@@ -3,14 +3,14 @@
 
 - name: "Create Cluster Operator Service Account yaml"
   template:
-    src: cluster-operator-sa.yml.j2
-    dest: /tmp/cluster-operator-sa.yaml
+    src: 010-ServiceAccount-strimzi-cluster-operator.yaml.j2
+    dest: /tmp/010-ServiceAccount-strimzi-cluster-operator.yaml
 
 - name: "Create Cluster operator Service Account"
-  shell: "oc create -f /tmp/cluster-operator-sa.yaml -n {{ namespace }}"
+  shell: "oc create -f /tmp/010-ServiceAccount-strimzi-cluster-operator.yaml -n {{ namespace }}"
 
 - name: "Delete Cluster Operator Service Account Template File"
-  file: path=/tmp/cluster-operator-sa.yaml state=absent
+  file: path=/tmp/010-ServiceAccount-strimzi-cluster-operator.yaml state=absent
 
 - name: "Create Cluster Operator yaml"
   template:
