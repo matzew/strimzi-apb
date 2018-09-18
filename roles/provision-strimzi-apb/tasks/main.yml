@@ -82,11 +82,10 @@
 - include_tasks: strimzi-crds.yml
 
 - name: "Create Deplyment"
-  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/05-Deployment-strimzi-cluster-operator.yaml -n {{ namespace }}"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/050-Deployment-strimzi-cluster-operator.yaml -n {{ namespace }}"
 
 - name: "Create Persistant Storage template"
   shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/templates/cluster-operator/persistent-template.yaml -n {{ namespace }}"
-
 
 # Check if the required Strimzi CO pods is ready
 - name: "Wait for Strimzi topic Operator to become ready"
