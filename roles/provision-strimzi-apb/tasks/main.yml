@@ -12,19 +12,30 @@
 - name: "Delete Cluster Operator Service Account Template File"
   file: path=/tmp/010-ServiceAccount-strimzi-cluster-operator.yaml state=absent
 
-- name: "Create Cluster Operator yaml"
-  template:
-    src: 02-ClusterRoleBinding-strimzi-cluster-operator.yaml.j2
-    dest: /tmp/02-ClusterRoleBinding-strimzi-cluster-operator.yaml
-
-- name: "Deploy Cluster Operator yaml"
-  shell: "oc create -f /tmp/02-ClusterRoleBinding-strimzi-cluster-operator.yaml -n {{ namespace }}"
-
-- name: "Delete Cluster Operator yaml"
-  file: path=/tmp/02-ClusterRoleBinding-strimzi-cluster-operator.yaml state=absent
-
 - name: "Create Cluster Operator Role"
-  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/02-ClusterRole-strimzi-cluster-operator-role.yaml -n {{ namespace }}"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/020-ClusterRole-strimzi-cluster-operator-role.yaml -n {{ namespace }}"
+
+- name: "Create RoleBinding for Cluster Operator yaml"
+  template:
+    src: 020-RoleBinding-strimzi-cluster-operator.yaml.j2
+    dest: /tmp/020-RoleBinding-strimzi-cluster-operator.yaml
+
+- name: "Deploy RoleBinding for Cluster Operator yaml"
+  shell: "oc create -f /tmp/020-RoleBinding-strimzi-cluster-operator.yaml -n {{ namespace }}"
+
+- name: "Delete ClusterRoleBinding for Cluster Operator yaml"
+  file: path=/tmp/020-RoleBinding-strimzi-cluster-operator.yaml state=absent
+
+- name: "Create ClusterRoleBinding for Cluster Operator yaml"
+  template:
+    src: 021-ClusterRoleBinding-strimzi-cluster-operator.yaml.j2
+    dest: /tmp/021-ClusterRoleBinding-strimzi-cluster-operator.yaml
+
+- name: "Deploy ClusterRoleBinding for Cluster Operator yaml"
+  shell: "oc create -f /tmp/021-ClusterRoleBinding-strimzi-cluster-operator.yaml -n {{ namespace }}"
+
+- name: "Delete ClusterRoleBinding for Cluster Operator yaml"
+  file: path=/tmp/021-ClusterRoleBinding-strimzi-cluster-operator.yaml state=absent
 
 - name: "Create Broker delegation yaml"
   template:
