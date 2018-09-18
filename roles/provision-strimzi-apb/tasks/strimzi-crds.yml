@@ -1,0 +1,45 @@
+- name: "Check if the kafkas.kafka.strimzi.io CRD is present"
+  shell: kubectl get kafkas
+  ignore_errors: yes
+  register: kafkas_crd_result
+
+- name: "Create Kafka CRD"
+  when: kafkas_crd_result.rc != 0
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/040-Crd-kafka.yaml -n {{ namespace }}"
+
+- name: "Check if the kafkaconnect.kafka.strimzi.io CRD is present"
+  shell: kubectl get kafkaconnects
+  ignore_errors: yes
+  register: kafkaconnects_crd_result
+
+- name: "Create KafkaConnect CRD"
+  when: kafkaconnects_crd_result.rc != 0
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/041-Crd-kafkaconnect.yaml -n {{ namespace }}"
+
+- name: "Check if the kafkaconnects2is.kafka.strimzi.io CRD is present"
+  shell: kubectl get kafkaconnects2is
+  ignore_errors: yes
+  register: kafkaconnects2is_crd_result
+
+- name: "Create KafkaConnectS2I CRD"
+  when: kafkaconnects2is_crd_result.rc != 0
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/042-Crd-kafkaconnects2i.yaml -n {{ namespace }}"
+
+- name: "Check if the kafkatopics.kafka.strimzi.io CRD is present"
+  shell: kubectl get kafkatopics
+  ignore_errors: yes
+  register: kafkatopics_crd_result
+
+- name: "Create Topic CRD"
+  when: kafkatopics_crd_result.rc != 0
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/043-Crd-kafkatopic.yaml -n {{ namespace }}"
+
+- name: "Check if the kafkausers.kafka.strimzi.io CRD is present"
+  shell: kubectl get kafkausers
+  ignore_errors: yes
+  register: kafkausers_crd_result
+
+- name: "Create User CRD"
+  when: kafkausers_crd_result.rc != 0
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/044-Crd-kafkauser.yaml -n {{ namespace }}"
+
