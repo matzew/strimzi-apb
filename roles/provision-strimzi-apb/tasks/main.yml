@@ -65,19 +65,19 @@
 - name: "Delete Entity-Operator delegation yaml"
   file: path=/tmp/031-RoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml state=absent
 
+- name: "Create Topic-Operator Role"
+  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/032-ClusterRole-strimzi-topic-operator.yaml -n {{ namespace }}"
+
 - name: "Create Topic-Operator delegation yaml"
   template:
-    src: 04-ClusterRoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml.j2
-    dest: /tmp/04-ClusterRoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml
+    src: 032-RoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml.j2
+    dest: /tmp/032-RoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml
 
 - name: "Deploy Topic-Operator delegation yaml"
-  shell: "oc create -f /tmp/04-ClusterRoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml -n {{ namespace }}"
+  shell: "oc create -f /tmp/032-RoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml -n {{ namespace }}"
 
 - name: "Delete Topic-Operator delegation yaml"
-  file: path=/tmp/04-ClusterRoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml state=absent
-
-- name: "Create Topic-Operator Role"
-  shell: "oc create -f https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/{{ STRIMZI_VERSION }}/examples/install/cluster-operator/04-ClusterRole-strimzi-topic-operator.yaml -n {{ namespace }}"
+  file: path=/tmp/032-RoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml state=absent
 
 - name: "Check if the kafkaconnects2is.kafka.strimzi.io CRD is present"
   shell: kubectl get kafkaconnects2is
